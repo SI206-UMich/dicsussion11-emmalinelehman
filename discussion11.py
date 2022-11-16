@@ -60,9 +60,16 @@ def add_pets_from_json(filename, cur, conn):
     json_data = json.loads(file_data)
 
     # THE REST IS UP TO YOU
-    pass
+    ped_id= 1
+    for item in json_data:
+        cur.execute("INSERT INTO Patients (name,species_id,age,cuteness,aggressiveness) VALUES (?,?,?,?,?,?)",(item['name'],item['species_id'],item['age'],item['cuteness'],item['aggressiveness']))
+        
+        cur.execture("SELECT * FROM Species WHERE title = ?",(item['species_id'],))
 
-
+        species_id = int(cur.fetchone()[0])
+        cur.execute("INSERT INTO Patients (name,species_id,age,cuteness,aggressiveness) VALUES (?,?,?,?,?,?)",(ped_id,item['name'],species_id,item['age'],item['cuteness'],item['aggressiveness']))
+        ped_id += 1
+    conn.commit()
 # TASK 3
 # CODE TO OUTPUT NON-AGGRESSIVE PETS
 def non_aggressive_pets(aggressiveness, cur, conn):
